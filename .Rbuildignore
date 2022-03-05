@@ -1,0 +1,9 @@
+^hippie\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^NEWS\.md$
+^\.gitattributes$
+^inst/dev\.R$
+^cran-comments\.md$
+^Makefile$
+^\.github$
