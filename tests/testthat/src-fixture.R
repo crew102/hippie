@@ -23,5 +23,5 @@ blah
 
 funny_object <- fu
 fu <- funny
-
+"["
 unparsable_code <- "m

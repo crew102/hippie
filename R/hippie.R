@@ -20,13 +20,14 @@ hippie_up_down <- function(direction) {
   if (is_1st_invoke)
     init_state(editor_context)
 
-  # Direction doesn't matter ---------------------------
-  if (.hippie$num_candidates == 0) {
-    return()
-  } else if (.hippie$num_candidates == 1) {
-    candidate <- .hippie$all_candidates
+  # Bail if no good match target or candidate matches
+  if (.hippie$target_token == "") return()
+  if (.hippie$num_candidates == 0) return()
 
-  # Up ---------------------------
+  # Direction doesn't matter ---------------------
+  if (.hippie$num_candidates == 1) {
+    candidate <- .hippie$all_candidates
+  # Direction = Up ---------------------
   } else if (direction == "up") {
     if (is_1st_invoke) {
       .hippie$candidate_index <- .hippie$num_up_candidates
@@ -38,8 +39,7 @@ hippie_up_down <- function(direction) {
       .hippie$candidate_index <- .hippie$num_candidates
     }
     candidate <- .hippie$all_candidates[.hippie$candidate_index]
-
-  # Down ---------------------------
+  # Direction = Down ---------------------
   } else {
     if (is_1st_invoke) {
       .hippie$candidate_index <- .hippie$num_up_candidates + 1
@@ -110,8 +110,9 @@ init_state <- function(editor_context) {
   .hippie$num_candidates <- length(.hippie$all_candidates)
   .hippie$num_up_candidates <- length(up_candidates)
   .hippie$doc_id <- editor_context$id
+  .hippie$target_token <- target_token
 
-  if (.hippie$num_candidates == 0) return()
+  if (.hippie$num_candidates == 0 || target_token == "") return()
 
   target_token_range <- rstudioapi::document_range(
     start = c(cursor$row, cursor$column),

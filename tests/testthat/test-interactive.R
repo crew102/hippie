@@ -50,6 +50,10 @@ test_that("No matching candidate matches means no text is selected", {
   expect_hippie_match(c(17, 20), "", code = hippie_up())
 })
 
+test_that("No target token means no text is selected", {
+  expect_hippie_match(c(26, 3), "", code = hippie_up())
+})
+
 test_that("Candidate matches extend to tokens with . in them", {
   expect_hippie_match(c(20, 5), "blah.blah", code = hippie_up())
 })
