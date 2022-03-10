@@ -12,48 +12,48 @@ hippie_down <- function() {
   try(hippie_up_down(direction = "down"))
 }
 
-hippie_up_down <- function(direction = "up") {
+hippie_up_down <- function(direction) {
   editor_context <- rstudioapi::getSourceEditorContext()
   selection <- rstudioapi::primary_selection(editor_context)
 
   is_1st_invoke <- is_first_invocation(selection)
   if (is_1st_invoke)
-    init_state(editor_context, selection)
+    init_state(editor_context)
 
   # Direction doesn't matter ---------------------------
   if (.hippie$num_candidates == 0) {
     return()
   } else if (.hippie$num_candidates == 1) {
-    match_to_insert <- .hippie$all_candidates
+    candidate <- .hippie$all_candidates
 
   # Up ---------------------------
   } else if (direction == "up") {
     if (is_1st_invoke) {
-      .hippie$cur_posish <- .hippie$num_up_candidates
+      .hippie$candidate_index <- .hippie$num_up_candidates
     } else {
-      .hippie$cur_posish <- .hippie$cur_posish - 1
+      .hippie$candidate_index <- .hippie$candidate_index - 1
     }
-    if (.hippie$cur_posish <= 0) {
+    if (.hippie$candidate_index <= 0) {
       # Cycling through to bottom of file
-      .hippie$cur_posish <- .hippie$num_candidates
+      .hippie$candidate_index <- .hippie$num_candidates
     }
-    match_to_insert <- .hippie$all_candidates[.hippie$cur_posish]
+    candidate <- .hippie$all_candidates[.hippie$candidate_index]
 
   # Down ---------------------------
   } else {
     if (is_1st_invoke) {
-      .hippie$cur_posish <- .hippie$num_up_candidates + 1
+      .hippie$candidate_index <- .hippie$num_up_candidates + 1
     } else {
-      .hippie$cur_posish <- .hippie$cur_posish + 1
+      .hippie$candidate_index <- .hippie$candidate_index + 1
     }
-    if (.hippie$cur_posish > .hippie$num_candidates) {
+    if (.hippie$candidate_index > .hippie$num_candidates) {
       # Cycling through to top of file
-      .hippie$cur_posish <- 1
+      .hippie$candidate_index <- 1
     }
-    match_to_insert <- .hippie$all_candidates[.hippie$cur_posish]
+    candidate <- .hippie$all_candidates[.hippie$candidate_index]
   }
 
-  rstudioapi::insertText(text = match_to_insert, id = .hippie$doc_id)
+  rstudioapi::insertText(text = candidate, id = .hippie$doc_id)
   invisible()
 }
 
@@ -61,7 +61,8 @@ is_first_invocation <- function(selection) {
   selection[["text"]] == ""
 }
 
-init_state <- function(editor_context, selection) {
+init_state <- function(editor_context) {
+  selection <- rstudioapi::primary_selection(editor_context)
   cursor <- id_cursor_position(selection)
   src <- editor_context$contents
   cursor_line_src <- src[[cursor$row]]

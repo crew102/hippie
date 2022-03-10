@@ -1,3 +1,5 @@
+# These tests have to be run interactively in RStudio by sourcing this file.
+
 context("Interactive tests")
 
 test_that("Target chars within string literal work", {
