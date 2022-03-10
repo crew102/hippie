@@ -1,0 +1,9 @@
+Name: Hippie completion up
+Description: Search for completions via hippie completion, searching upwards
+Binding: hippie_up
+Interactive: false
+
+Name: Hippie completion down
+Description: Search for completions via hippie completion, searching downwards
+Binding: hippie_down
+Interactive: false
