@@ -12,15 +12,42 @@ hippie_down <- function() {
   try(hippie_up_down(direction = "down"))
 }
 
+init_flag <- getOption("hippie.first_invoke_flag", "token_len") # select is another option
+target_token_max_len <- getOption("hippie.target_token_max_len", 3)
+
+parse_target_token <- function(editor_context) {
+  selection <- rstudioapi::primary_selection(editor_context)
+  cursor <- id_cursor_position(selection)
+  src <- editor_context$contents
+  cursor_line_src <- src[[cursor$row]]
+  substr_left_of_cursor <- substr(cursor_line_src, 1, cursor$column - 1)
+  tokens <- unlist(strsplit(substr_left_of_cursor, TOKENIZE_ON))
+  if (length(tokens) == 0 || is.null(tokens)) return("")
+  tokens[length(tokens)]
+}
+
 hippie_up_down <- function(direction) {
   editor_context <- rstudioapi::getSourceEditorContext()
   selection <- rstudioapi::primary_selection(editor_context)
 
-  is_1st_invoke <- is_first_invocation(selection)
+  if (init_flag == "token_len") {
+    target_token <- parse_target_token(editor_context)
+    if (nchar(target_token) <= target_token_max_len) {
+      is_1st_invoke <- TRUE
+      .hippie$target_token <- target_token
+    } else {
+      is_1st_invoke <- FALSE
+    }
+  } else {
+    is_1st_invoke <- is_first_invocation(selection)
+  }
+
   if (is_1st_invoke)
     init_state(editor_context)
 
   # Bail if no good match target or candidate matches
+  if (is.null(.hippie$target_token)) return()
+  if (is.null(.hippie$num_candidates)) return()
   if (.hippie$target_token == "") return()
   if (.hippie$num_candidates == 0) return()
 
@@ -53,7 +80,19 @@ hippie_up_down <- function(direction) {
     candidate <- .hippie$all_candidates[.hippie$candidate_index]
   }
 
-  rstudioapi::insertText(text = candidate, id = .hippie$doc_id)
+  if (init_flag == "token_len") {
+    rstudioapi::setSelectionRanges(.hippie$target_token_range, id = .hippie$doc_id)
+    rstudioapi::insertText(
+      text = candidate,
+      id = .hippie$doc_id
+    )
+
+    cur_context <- rstudioapi::getSourceEditorContext()
+    .hippie$target_token_range <- cur_context$selection[[1]]$range
+    rstudioapi::setCursorPosition(.hippie$target_token_range$end, id = .hippie$doc_id)
+  } else {
+    rstudioapi::insertText(text = candidate, id = .hippie$doc_id)
+  }
   invisible()
 }
 
@@ -80,9 +119,11 @@ init_state <- function(editor_context) {
     substr_left_of_cursor
   )
   up_tokens <- parse_candidate_tokens(up_src)
-  target_token <- up_tokens[length(up_tokens)]
+  if (init_flag != "token_len") {
+    .hippie$target_token <- up_tokens[length(up_tokens)]
+  }
   up_candidates <- find_unique_matches(
-    up_tokens, target_token, from_last = TRUE
+    up_tokens, .hippie$target_token, from_last = TRUE
   )
 
   # Tokens below cursor ---------------------------
@@ -101,7 +142,7 @@ init_state <- function(editor_context) {
   )
   down_tokens <- parse_candidate_tokens(down_src)
   down_candidates <- find_unique_matches(
-    down_tokens, target_token, from_last = FALSE
+    down_tokens, .hippie$target_token, from_last = FALSE
   )
 
   # Note that if a candidate token appears both above and below the cursor,
@@ -110,15 +151,18 @@ init_state <- function(editor_context) {
   .hippie$num_candidates <- length(.hippie$all_candidates)
   .hippie$num_up_candidates <- length(up_candidates)
   .hippie$doc_id <- editor_context$id
-  .hippie$target_token <- target_token
 
-  if (.hippie$num_candidates == 0 || target_token == "") return()
+  if (.hippie$num_candidates == 0 || .hippie$target_token == "")
+    return()
 
-  target_token_range <- rstudioapi::document_range(
+  .hippie$target_token_range <- rstudioapi::document_range(
     start = c(cursor$row, cursor$column),
-    end = c(cursor$row, cursor$column - nchar(target_token, type = "width"))
+    end = c(cursor$row, cursor$column - nchar(.hippie$target_token, type = "width"))
   )
-  rstudioapi::setSelectionRanges(target_token_range, id = .hippie$doc_id)
+
+  if (init_flag != "token_len") {
+    rstudioapi::setSelectionRanges(.hippie$target_token_range, id = .hippie$doc_id)
+  }
 }
 
 id_cursor_position <- function(selection) {
@@ -155,12 +199,18 @@ parse_candidate_tokens <- function(src_text) {
     }
   }
 
-  unlist(mapply(
+  candidate_tokens <- unlist(mapply(
     FUN = split_str_tokens,
     value = relevant_tokens$value,
     type = relevant_tokens$type,
     USE.NAMES = FALSE
   ))
+
+  if (init_flag == "token_len") {
+    candidate_tokens[nchar(candidate_tokens) > target_token_max_len]
+  } else {
+    candidate_tokens
+  }
 }
 
 find_unique_matches <- function(token_vec,
