@@ -1,7 +1,8 @@
 expect_hippie_match <- function(cursor_posish, expected_match, code = NULL,
                                 envir = parent.frame()) {
   skip_if_not(rstudioapi::isAvailable())
-  fixture_file <- test_path('src-fixture.R')
+  withr::local_options(list("hippie.mode" = "select"))
+  fixture_file <- test_path("src-fixture.R")
   tmp_file <- fs::file_temp()
 
   suppressMessages(
@@ -17,7 +18,7 @@ expect_hippie_match <- function(cursor_posish, expected_match, code = NULL,
   tmp_content <- rstudioapi::getSourceEditorContext()
 
   tmp_file_id <- tmp_content$id
-  rstudioapi::setCursorPosition(cursor_posish , tmp_file_id)
+  rstudioapi::setCursorPosition(cursor_posish, tmp_file_id)
 
   code
 
