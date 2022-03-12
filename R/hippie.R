@@ -123,11 +123,12 @@ init_state <- function(editor_context) {
   } else {
     lines_above_cursor <- src[1:(cursor$row - 1)]
   }
-  substr_left_of_cursor <- substr(cursor_line_src, 1, cursor$column - 1)
+  substr_on_left <- substr(cursor_line_src, 1, cursor$column - 1)
+  substr_on_left <- maybe_close_str(substr_on_left, side_lopped_off = "right")
   up_src <- paste0(
     paste0(lines_above_cursor, collapse = "\n"),
     "\n",
-    substr_left_of_cursor
+    substr_on_left
   )
   up_tokens <- parse_candidate_tokens(up_src)
   target_token <- up_tokens[length(up_tokens)]
@@ -143,9 +144,10 @@ init_state <- function(editor_context) {
     lines_below_cursor <- src[(cursor$row + 1):num_src_lines]
   }
   line_len <- nchar(cursor_line_src)
-  substr_right_of_cursor <- substr(cursor_line_src, cursor$column, line_len)
+  substr_on_right <- substr(cursor_line_src, cursor$column, line_len)
+  substr_on_right <- maybe_close_str(substr_on_right, side_lopped_off = "left")
   down_src <- paste0(
-    substr_right_of_cursor,
+    substr_on_right,
     "\n",
     paste0(lines_below_cursor, collapse = "\n")
   )
@@ -229,6 +231,31 @@ parse_candidate_tokens <- function(src_text) {
     using_select_mode = using_select_mode,
     USE.NAMES = FALSE
   ))
+}
+
+maybe_close_str <- function(src_line_frag, side_lopped_off) {
+  chars <- unlist(strsplit(src_line_frag, ""))
+  has_odd_single_quotes <- (length(chars[chars == "'"]) %% 2) != 0
+  has_odd_dbl_quotes <- (length(chars[chars == "\""]) %% 2) != 0
+  # Odd number of single quotes probably more coincident with cases where the
+  # src_line_frag is actually parsable R code (i.e., b/c of prevalence of ' vs
+  # " in English), hence we'll prioritize case where we have odd number of
+  # double quotes. You're out of luck if you have an odd number of both single
+  # and double. Not trying to figure that out that edge case right now.
+  if (has_odd_dbl_quotes) {
+    if (side_lopped_off == "right") {
+      return(paste0(src_line_frag, "\""))
+    } else {
+      return(paste0("\"", src_line_frag))
+    }
+  } else if (has_odd_single_quotes) {
+    if (side_lopped_off == "right") {
+      return(paste0(src_line_frag, "'"))
+    } else {
+      return(paste0("'", src_line_frag))
+    }
+  }
+  src_line_frag
 }
 
 find_unique_matches <- function(token_vec,

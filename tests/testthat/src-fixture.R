@@ -24,4 +24,13 @@ blah
 funny_object <- fu
 fu <- funny
 "["
+
+"Luke"
+
+"Luke Skywalker"
+
+
+
+
+
 unparsable_code <- "m

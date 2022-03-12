@@ -49,6 +49,12 @@ test_that("Intra-line matching works", {
   expect_hippie_match(c(25, 3), "funny", sequence = "down")
 })
 
+test_that("Phrase matching while cursor within string works", {
+  expect_hippie_match(
+    c(28, 6), "Luke Skywalker", sequence = "down", modes = "select"
+  )
+})
+
 test_that("Non-parsable lines are not a problem", {
   expect_hippie_match(c(27, 22), "matching", sequence = "up")
 })
