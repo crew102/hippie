@@ -130,7 +130,7 @@ init_state <- function(editor_context) {
     "\n",
     substr_on_left
   )
-  up_tokens <- parse_candidate_tokens(up_src)
+  up_tokens <- parse_candidate_tokens(editor_context$path, up_src)
   target_token <- up_tokens[length(up_tokens)]
   up_candidates <- find_unique_matches(
     up_tokens, target_token, from_last = TRUE
@@ -151,7 +151,7 @@ init_state <- function(editor_context) {
     "\n",
     paste0(lines_below_cursor, collapse = "\n")
   )
-  down_tokens <- parse_candidate_tokens(down_src)
+  down_tokens <- parse_candidate_tokens(editor_context$path, down_src)
   down_candidates <- find_unique_matches(
     down_tokens, target_token, from_last = FALSE
   )
@@ -186,7 +186,18 @@ id_cursor_position <- function(selection) {
   list(row = start[["row"]], column = end[["column"]])
 }
 
-parse_candidate_tokens <- function(src_text) {
+parse_candidate_tokens <- function(path, src_text) {
+  if (is_r_file(path))
+    parse_candidates_from_r_file(src_text)
+  else
+    parse_candidates_from_non_r_file(src_text)
+}
+
+is_r_file <- function(path) {
+  grepl("\\.r$", path, ignore.case = TRUE)
+}
+
+parse_candidates_from_r_file <- function(src_text) {
   tokens <- sourcetools::tokenize_string(src_text)
   relevant_token_types <- c(
     "string", "symbol", "keyword", "comment", "number", "invalid"
@@ -231,6 +242,10 @@ parse_candidate_tokens <- function(src_text) {
     using_select_mode = using_select_mode,
     USE.NAMES = FALSE
   ))
+}
+
+parse_candidates_from_non_r_file <- function(src_text) {
+  unlist(strsplit(src_text, SPLIT_STR_ON))
 }
 
 maybe_close_str <- function(src_line_frag, side_lopped_off) {
