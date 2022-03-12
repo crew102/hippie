@@ -1,6 +1,7 @@
 .hippie <- new.env(parent = emptyenv())
 
-TOKENIZE_ON <- "[^[:alnum:]_.]"
+SPLIT_SYMBOL_ON <- "[^[:alnum:]_.]"
+SPLIT_STR_ON <- "[^[:alnum:]_]"
 
 #' @export
 hippie_up <- function() {
@@ -20,7 +21,7 @@ hippie_up_down <- function(direction) {
   if (is_1st_invoke)
     init_state(editor_context)
 
-  # Bail if no good match target or candidate matches
+  # Bail if no good match target or no match candidates
   if (is.null(.hippie$target_token)) return()
   if (is.null(.hippie$num_candidates)) return()
   if (.hippie$target_token == "") return()
@@ -105,7 +106,7 @@ extract_nearest_token <- function(editor_context) {
   src <- editor_context$contents
   cursor_line_src <- src[[cursor$row]]
   substr_left_of_cursor <- substr(cursor_line_src, 1, cursor$column - 1)
-  tokens <- unlist(strsplit(substr_left_of_cursor, TOKENIZE_ON))
+  tokens <- unlist(strsplit(substr_left_of_cursor, SPLIT_SYMBOL_ON))
   if (length(tokens) == 0 || is.null(tokens)) return("")
   tokens[length(tokens)]
 }
@@ -116,7 +117,7 @@ init_state <- function(editor_context) {
   src <- editor_context$contents
   cursor_line_src <- src[[cursor$row]]
 
-  # ID tokens above cursor ---------------------------
+  # ID match candidates above cursor ---------------------------
   if (cursor$row == 1) {
     lines_above_cursor <- NULL
   } else {
@@ -134,7 +135,7 @@ init_state <- function(editor_context) {
     up_tokens, target_token, from_last = TRUE
   )
 
-  # ID tokens below cursor ---------------------------
+  # ID match candidates below cursor ---------------------------
   num_src_lines <- length(src)
   if (cursor$row == num_src_lines) {
     lines_below_cursor <- NULL
@@ -202,16 +203,20 @@ parse_candidate_tokens <- function(src_text) {
 
   split_str_tokens <- function(value, type, using_select_mode) {
     if (type == "string") {
-      # We put the full string above the tokens found within the string
-      # when ordering match candidates, but only when we can accurately keep
-      # track of tokens (i.e., when using "select mode")
+      # We want to be able to match an entire string literal and also the tokens
+      # inside those strings. We allow for that here, but only when we can
+      # accurately keep track of the match token (i.e., when using "select
+      # mode"). Note that the full string literal is prioritized lower
+      # than the constituent tokens in the match list, by nature of fact that
+      # it's put before the tokens in the token list and most times people will
+      # be using hippie_up().
       if (using_select_mode) {
-        c(value, unlist(strsplit(value, TOKENIZE_ON)))
+        c(value, unlist(strsplit(value, SPLIT_STR_ON)))
       } else {
-        unlist(strsplit(value, TOKENIZE_ON))
+        unlist(strsplit(value, SPLIT_STR_ON))
       }
     } else if (type %in% c("comment", "invalid")) {
-      unlist(strsplit(value, TOKENIZE_ON))
+      unlist(strsplit(value, SPLIT_STR_ON))
     } else {
       value
     }
@@ -229,9 +234,7 @@ parse_candidate_tokens <- function(src_text) {
 find_unique_matches <- function(token_vec,
                                 target_token,
                                 from_last = TRUE) {
-  # Not sure if this is the fastest way to do this (i.e., first filter empties,
-  # then apply regex). May be faster to just apply the regex before filtering
-  # empties?
+  # May be faster to just apply the regex and skip filtering of empties?
   non_empties <- token_vec[token_vec != ""]
   if (is.null(non_empties)) return(NULL)
   matches <- non_empties[startsWith(toupper(non_empties), toupper(target_token))]
