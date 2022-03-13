@@ -1,11 +1,11 @@
 # These tests have to be run interactively in RStudio by sourcing this file.
 
-test_that("Target chars within string literal work", {
+test_that("Targets within string literals match R symbols", {
   expect_hippie_match(c(5, 11), "matching_token", sequence = "up")
   expect_hippie_match(c(5, 11), "matching_token", sequence = "up")
 })
 
-test_that("Target chars within assigned string literal work", {
+test_that("Targets within assigned string literals work", {
   expect_hippie_match(c(7, 18), "matching_", sequence = "up")
   expect_hippie_match(c(7, 18), "matc", sequence = c("up", "up"))
   expect_hippie_match(c(7, 18), "match", sequence = "down")
@@ -16,15 +16,15 @@ test_that("Candidate matches are recycled/iterated through correctly", {
   expect_hippie_match(c(7, 18), "matching", sequence = c("up", "down", "down"))
 })
 
-test_that("Target chars within substring work", {
+test_that("Targets within strings match tokens within other literals", {
   expect_hippie_match(c(9, 16), "matching_", sequence = "up")
 })
 
-test_that("Numeric target works", {
+test_that("Numeric targets work", {
   expect_hippie_match(c(13, 2), "19847", sequence = "up")
 })
 
-test_that("Targets within strings with escape chars works", {
+test_that("Targets within strings with escape chars work", {
   expect_hippie_match(c(15, 33), "matching_", sequence = c("up", "up"))
 })
 
@@ -36,11 +36,11 @@ test_that("No target token means no text is selected", {
   expect_hippie_match(c(26, 3), "", sequence = "up")
 })
 
-test_that("Candidate matches extend to tokens with . in them", {
+test_that("Candidate matches that are R symbols with a . in them match fine", {
   expect_hippie_match(c(20, 5), "blah.blah", sequence = "up")
 })
 
-test_that("Target chars inside comments work", {
+test_that("Targets within comments match to strings", {
   expect_hippie_match(c(22, 17), "matching_", sequence = "up")
 })
 
@@ -56,5 +56,7 @@ test_that("Phrase matching while cursor within string works", {
 })
 
 test_that("Non-parsable lines are not a problem", {
-  expect_hippie_match(c(27, 22), "matching", sequence = "up")
+  expect_hippie_match(c(36, 22), "matching", sequence = "up")
+})
+
 })

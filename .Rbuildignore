@@ -8,3 +8,5 @@
 ^Makefile$
 ^\.github$
 TODO.md
+^img$
+^tests/testthat/fixtures$
