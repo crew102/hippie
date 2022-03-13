@@ -59,4 +59,9 @@ test_that("Non-parsable lines are not a problem", {
   expect_hippie_match(c(36, 22), "matching", sequence = "up")
 })
 
+test_that("Non-r source files work", {
+  expect_hippie_match(
+    c(20, 3), "formatting", sequence = rep("up", 3),
+    fixture_file = "rmd-source.Rmd"
+  )
 })
