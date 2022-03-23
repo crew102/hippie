@@ -7,3 +7,9 @@ Name: Hippie completion down
 Description: Search for completions via hippie completion, searching downwards
 Binding: hippie_down
 Interactive: false
+
+Name: Invoke data viewer
+Description: Invokes utils::View on the results of running the pipe-based (%>%)
+  expression to the left of the cursor
+Binding: invoke_view
+Interactive: false

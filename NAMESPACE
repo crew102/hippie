@@ -2,3 +2,4 @@
 
 export(hippie_down)
 export(hippie_up)
+export(invoke_view)
