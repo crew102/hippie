@@ -14,11 +14,12 @@ invoke_view_ <- function() {
   above_cursor <- cursor_line > expr$line2
   prior_to_cursor <- expr[left_of_cursor | above_cursor, ]
   pipe_expr <- prior_to_cursor[grepl("%>%", prior_to_cursor$text), ]
+  if (nrow(pipe_expr) == 0) return()
   chosen_expr <- pipe_expr[pipe_expr$id == max(pipe_expr$id), "text"]
   to_eval <- paste0("View(", chosen_expr, ")")
 
-  if (getOption("hippie.pipe_to_console", default = "false") == "true") {
-    rstudioapi::sendToConsole(to_eval)
+  if (getOption("hippie.pipe_to_console", default = "true") == "true") {
+    rstudioapi::sendToConsole(to_eval, focus = FALSE)
   } else {
     eval(parse(text = to_eval))
   }
