@@ -6,13 +6,13 @@ SPLIT_STR_ON <- "[^[:alnum:]_]"
 #' @rdname hippie-invoke
 #' @export
 hippie_up <- function() {
-  try(hippie_up_down(direction = "up"))
+  try(hippie_up_down(direction = "up"), silent = TRUE)
 }
 
 #' @rdname hippie-invoke
 #' @export
 hippie_down <- function() {
-  try(hippie_up_down(direction = "down"))
+  try(hippie_up_down(direction = "down"), silent = TRUE)
 }
 
 hippie_up_down <- function(direction) {
