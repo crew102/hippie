@@ -1,4 +1,4 @@
-invoke_view_ <- function() {
+.invoke_view <- function() {
   context <- rstudioapi::getSourceEditorContext()
   selection <- rstudioapi::primary_selection(context$selection)
   cursor_line <- selection$range$start[[1]]
@@ -18,7 +18,7 @@ invoke_view_ <- function() {
   chosen_expr <- pipe_expr[pipe_expr$id == max(pipe_expr$id), "text"]
   to_eval <- paste0("View(", chosen_expr, ")")
 
-  if (getOption("hippie.pipe_to_console", default = "true") == "true") {
+  if (getOption("hippie.pipe_to_console", default = TRUE)) {
     rstudioapi::sendToConsole(to_eval, focus = FALSE)
   } else {
     eval(parse(text = to_eval))
@@ -27,5 +27,5 @@ invoke_view_ <- function() {
 
 #' @export
 invoke_view <- function() {
-  try(invoke_view_(), silent = TRUE)
+  try(.invoke_view(), silent = TRUE)
 }
