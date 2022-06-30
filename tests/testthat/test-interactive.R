@@ -1,4 +1,5 @@
-# These tests have to be run interactively in RStudio by sourcing this file.
+# These tests have to be run interactively in RStudio by first calling
+# devtools::load_all("."), then sourcing this file.
 
 test_that("Targets within string literals match R symbols", {
   expect_hippie_match(c(5, 11), "matching_token", sequence = "up")

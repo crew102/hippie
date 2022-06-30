@@ -9,11 +9,12 @@
   prsd_data <- utils::getParseData(prsd_src, includeText = TRUE)
   expr <- prsd_data[prsd_data$token == "expr", ]
 
-  # Here comes the adhoc logic to ID the relevant expression
+  # Here comes the ad hoc logic to ID the relevant expression
   left_of_cursor <- cursor_line == expr$line2 & cursor_col >= expr$col2
   above_cursor <- cursor_line > expr$line2
   prior_to_cursor <- expr[left_of_cursor | above_cursor, ]
   pipe_expr <- prior_to_cursor[grepl("%>%", prior_to_cursor$text), ]
+
   if (nrow(pipe_expr) == 0) return()
   chosen_expr <- pipe_expr[pipe_expr$id == max(pipe_expr$id), "text"]
   to_eval <- paste0("View(", chosen_expr, ")")
@@ -25,6 +26,16 @@
   }
 }
 
+#' Invoke `View()` on a piped expression
+#'
+#' This function is meant to be called as a shortcut. It will look for the
+#' left-nearest expression that contains the magrittr pipe operator (`%>%`),
+#' wrap it in a call to `View()`, then evaluate the result. By default it'll
+#' send the code to the console and evaluate it from there, so that it's
+#' available in your execution history. To evaluate the code straight away
+#' instead of sending it to the console first, set
+#' `option(hippie.pipe_to_console = FALSE)`.
+#'
 #' @export
 invoke_view <- function() {
   try(.invoke_view(), silent = TRUE)

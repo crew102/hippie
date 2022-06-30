@@ -258,7 +258,7 @@ maybe_close_str <- function(src_line_frag, side_lopped_off) {
   # src_line_frag is actually parsable R code (i.e., b/c of prevalence of ' vs
   # " in English), hence we'll prioritize case where we have odd number of
   # double quotes. You're out of luck if you have an odd number of both single
-  # and double. Not trying to figure that out that edge case right now.
+  # and double. Not trying to figure out that edge case right now.
   if (has_odd_dbl_quotes) {
     if (side_lopped_off == "right") {
       return(paste0(src_line_frag, "\""))

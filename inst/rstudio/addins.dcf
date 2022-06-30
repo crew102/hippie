@@ -1,10 +1,10 @@
-Name: Hippie completion up
-Description: Search for completions via hippie completion, searching upwards
+Name: Hippie Completion up
+Description: Invoke upwards Hippie Completion
 Binding: hippie_up
 Interactive: false
 
-Name: Hippie completion down
-Description: Search for completions via hippie completion, searching downwards
+Name: Hippie Completion down
+Description: Invoke downwards Hippie Completion
 Binding: hippie_down
 Interactive: false
 
