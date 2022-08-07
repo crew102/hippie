@@ -10,3 +10,4 @@
 TODO.md
 ^img$
 ^tests/testthat/fixtures$
+^img-back$
