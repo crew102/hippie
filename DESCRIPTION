@@ -1,6 +1,6 @@
 Package: hippie
 Title: Hippie Code Completion in RStudio
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: person("Christopher", "Baker", email = "chriscrewbaker@gmail.com",
   role = c("aut", "cre"))
 Description: An RStudio Addin for Hippie Expand (AKA Hippie Code
