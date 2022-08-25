@@ -5,7 +5,7 @@
 \alias{hippie}
 \alias{hippie_up}
 \alias{hippie_down}
-\title{Hippie code completion}
+\title{Hippie Code Completion}
 \usage{
 hippie_up()
 
@@ -16,5 +16,6 @@ A match token is inserted into the relevant RStudio source document
 context.
 }
 \description{
-Invoke hippie completion, either upwards or downwards.
+Invoke Hippie Completion, either upwards or downwards. This function is meant
+to be called as a shortcut.
 }

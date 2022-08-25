@@ -30,8 +30,8 @@
 **An RStudio addin for Hippie Code Completion**
 
 * **Speed.** Hit fewer keystrokes in getting the word you want
-* **More completions in R.** Extends completions to string literals, comments, and all throughout Roxygen blocks.
-* **Completions outside R.** Get completions in files where you otherwise can't - .yml, .txt, .md, markdown sections of .Rmd, etc.
+* **More completions in R.** Extends completions to string comments, string literals, and all throughout Roxygen blocks
+* **Completions outside R.** Get completions in files where you otherwise can't - .yml, .txt, .md, etc.
 
 ## About
 
@@ -50,7 +50,7 @@ Hippie's a completion engine that looks in your active source file for words to 
 
 <ul>
 <p>
-Even in larger files, you usually only need to type one or two characters before invoking Hippie, and the first suggestion will be the one you want.
+Even in larger files, you usually only need to type one or two characters before invoking the Hippie shortcut, and the first suggestion will be the one you want.
 </p>
 </ul>
 
@@ -85,7 +85,7 @@ Hippie also extends to all file types, including text files, markdown, config fi
   devtools::install_github("crew102/hippie")
   ```
 
-* Restart RStudio. RStudio will automatically detect the hippie addin moving forward.
+* Restart RStudio. RStudio will automatically detect the `hippie` addin moving forward.
 
 * Add a shortcut. 
 
@@ -111,11 +111,11 @@ Hippie also extends to all file types, including text files, markdown, config fi
 Thanks to 
 </h2>
 
-* Anders Holst, the creator of Hippie Expand in Emacs, both for the original idea of Hippie Completion and also for the fun name. According to Holdst:
+* Anders Holst, the creator of Hippie Expand in Emacs, both for the original idea of Hippie Completion and also for the fun name. According to Holst:
 
   > I came up with this try-function idea that tries one kind of expansion at a time, and lets the user press repeatedly to sequence through the alternatives. I called it Hippie Expand to signal that it's completely unrealistic, dreaming, kind of high. I was entirely convinced that it would not work in practice - that it would be necessary to press endlessly on the key it was bound to before the wanted expansion would show up.
 
-* [PyCharm's implemention of hippie](https://www.jetbrains.com/help/pycharm/auto-completing-code.html#hippie_completion), which inspired this package
+* [PyCharm's implementation of hippie](https://www.jetbrains.com/help/pycharm/auto-completing-code.html#hippie_completion), which inspired this package
 
 * [starship](https://github.com/starship/starship), whose README style I blatantly ripped off
 
