@@ -14,7 +14,7 @@
       alt="GitHub Actions workflow status"
   />
 </a>
-<a href="https://cran.r-project.org/package=hippie?style=for-the-badge">
+<a href="https://cran.r-project.org/package=hippie">
   <img
       src="http://www.r-pkg.org/badges/version/hippie"
       alt=""

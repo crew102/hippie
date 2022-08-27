@@ -1,9 +1,9 @@
 Package: hippie
-Title: Hippie Code Completion in RStudio
+Title: Hippie Code Completion in 'RStudio'
 Version: 0.1.0
 Authors@R: person("Christopher", "Baker", email = "chriscrewbaker@gmail.com",
   role = c("aut", "cre"))
-Description: An RStudio Addin for Hippie Expand (AKA Hippie Code
+Description: An 'RStudio' Addin for Hippie Expand (AKA Hippie Code
   Completion or Cyclic Expand Word). Hippie Completion searches for matching
   tokens within the user's current source editor file, regardless of file type.
   By searching only within the current source file, Hippie offers a fast way to
