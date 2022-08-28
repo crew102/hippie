@@ -36,6 +36,13 @@
 #' straight away instead of sending it to the console first, set
 #' `option(hippie.pipe_to_console = FALSE)`.
 #'
+#' @return Nothing. Code is either sent to your console for evaluation or
+#' evaluated straight away.
+#' @examples
+#' \dontrun{
+#' # Not intended to be called directly. Rather, bind to a keyboard shortcut.
+#' invoke_view()
+#' }
 #' @export
 invoke_view <- function() {
   try(.invoke_view(), silent = TRUE)
