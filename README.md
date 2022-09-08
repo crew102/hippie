@@ -30,7 +30,7 @@
 **An RStudio addin for Hippie Code Completion**
 
 * **Speed.** Hit fewer keystrokes in getting the word you want
-* **More completions in R.** Extends completions to string comments, string literals, and all throughout Roxygen blocks
+* **More completions in R.** Extends completions to comments, string literals, and all throughout Roxygen blocks
 * **Completions outside R.** Get completions in files where you otherwise can't - .yml, .txt, .md, etc.
 
 ## About
