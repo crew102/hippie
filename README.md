@@ -10,7 +10,7 @@
 
 <a href="https://github.com/crew102/hippie/actions/workflows/check-standard.yaml">
   <img
-      src="https://img.shields.io/github/workflow/status/crew102/hippie/R-CMD-check?logo=github"
+      src="https://img.shields.io/github/actions/workflow/status/crew102/hippie/check-standard.yaml"
       alt="GitHub Actions workflow status"
   />
 </a>
