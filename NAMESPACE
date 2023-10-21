@@ -3,3 +3,4 @@
 export(hippie_down)
 export(hippie_up)
 export(invoke_view)
+export(style_forward_assignment_selection)

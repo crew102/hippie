@@ -14,11 +14,12 @@ BugReports: https://github.com/crew102/hippie/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Imports:
     rstudioapi (>= 0.13),
     utils,
-    sourcetools
+    sourcetools,
+    styler
 Suggests:
     testthat (>= 3.0.0),
     withr,

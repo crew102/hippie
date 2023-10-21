@@ -13,3 +13,8 @@ Description: Invokes utils::View on the results of running a pipe-containing
   expression to the left of the cursor
 Binding: invoke_view
 Interactive: false
+
+Name: Style
+Description: Style with custom logic
+Binding: style_forward_assignment_selection
+Interactive: false
