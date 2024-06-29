@@ -18,3 +18,8 @@ Name: Style
 Description: Style with custom logic
 Binding: style_forward_assignment_selection
 Interactive: false
+
+Name: Run app
+Description: Shortcut to run app when normal shortcut doesn't work who knows why
+Binding: run_app
+Interactive: false
