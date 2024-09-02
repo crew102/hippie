@@ -16,7 +16,7 @@
 </a>
 <a href="https://cran.r-project.org/package=hippie">
   <img
-      src="http://www.r-pkg.org/badges/version/hippie"
+      src="https://www.r-pkg.org/badges/version/hippie"
       alt=""
   />
 </a>
